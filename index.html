@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toast jig</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block">
+<style>
+body{margin:0;font-family:Inter,system-ui,sans-serif}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;line-height:1;letter-spacing:normal;text-transform:none;white-space:nowrap;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';-webkit-font-smoothing:antialiased}
+.jig-types .ms{font-variation-settings:'FILL' 1}
+p{margin:0}
+[data-anchor="jig-bar"] button:focus-visible{outline:2px solid #84caff;outline-offset:-2px}
+
+html{background:#e5e7eb}
+body{padding:24px}
+#app{width:1360px;margin:0 auto;box-shadow:0 0 0 1px #d1d5dc}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<template id="jig-template">
+<div data-anchor="toast-jig" style="width: 1360px; min-height: 1500px; background: #ffffff; color: #111827; font-size: 13px; line-height: 18px;">
+<div data-anchor="jig-bar" style="background: #111827; color: #f9fafb; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; font-size: 12px; line-height: 16px; border-bottom: 1px solid #1f2937;">
+<span style="font-weight: 600; font-size: 13px; color: #ffffff; margin-right: 4px;">Toast jig</span>
+<div role="group" aria-label="View" style="display: flex; align-items: center; gap: 8px;"><span style="color: #9ca3af; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px;">View</span><div style="display: inline-flex; border: 1px solid #374151; border-radius: 6px; overflow: hidden;"><sc-for list="{{jig.view}}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button></sc-for></div></div>
+<sc-if value="{{isPage}}" hint-placeholder-val="{{false}}"><div role="group" aria-label="Page" style="display: flex; align-items: center; gap: 8px;"><span style="color: #9ca3af; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px;">Page</span><div style="display: inline-flex; border: 1px solid #374151; border-radius: 6px; overflow: hidden;"><sc-for list="{{jig.page}}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button></sc-for></div></div></sc-if>
+<sc-if value="{{showLightCtl}}" hint-placeholder-val="{{true}}"><div role="group" aria-label="Light border" style="display: flex; align-items: center; gap: 8px;"><span style="color: #9ca3af; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px;">Light border</span><div style="display: inline-flex; border: 1px solid #374151; border-radius: 6px; overflow: hidden;"><sc-for list="{{jig.light}}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button></sc-for></div></div></sc-if>
+<sc-if value="{{showDarkCtl}}" hint-placeholder-val="{{true}}"><div role="group" aria-label="Dark style" style="display: flex; align-items: center; gap: 8px;"><span style="color: #9ca3af; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px;">Dark style</span><div style="display: inline-flex; border: 1px solid #374151; border-radius: 6px; overflow: hidden;"><sc-for list="{{jig.dark}}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button></sc-for></div></div></sc-if>
+<sc-if value="{{isPage}}" hint-placeholder-val="{{false}}"><div role="group" aria-label="Toast type" style="display: flex; align-items: center; gap: 8px;"><span style="color: #9ca3af; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px;">Toast type</span><div style="display: inline-flex; border: 1px solid #374151; border-radius: 6px; overflow: hidden;"><sc-for list="{{jig.type}}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button></sc-for></div></div></sc-if>
+<div role="group" aria-label="Title" style="display: flex; align-items: center; gap: 8px;"><span style="color: #9ca3af; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px;">Title</span><div style="display: inline-flex; border: 1px solid #374151; border-radius: 6px; overflow: hidden;"><sc-for list="{{jig.title}}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button></sc-for></div></div>
+<div role="group" aria-label="Link" style="display: flex; align-items: center; gap: 8px;"><span style="color: #9ca3af; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px;">Link</span><div style="display: inline-flex; border: 1px solid #374151; border-radius: 6px; overflow: hidden;"><sc-for list="{{jig.link}}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button></sc-for></div></div>
+<div role="group" aria-label="Lines" style="display: flex; align-items: center; gap: 8px;"><span style="color: #9ca3af; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px;">Lines</span><div style="display: inline-flex; border: 1px solid #374151; border-radius: 6px; overflow: hidden;"><sc-for list="{{jig.lines}}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button></sc-for></div></div>
+<sc-if value="{{isPage}}" hint-placeholder-val="{{false}}"><div role="group" aria-label="Side nav" style="display: flex; align-items: center; gap: 8px;"><span style="color: #9ca3af; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px;">Side nav</span><div style="display: inline-flex; border: 1px solid #374151; border-radius: 6px; overflow: hidden;"><sc-for list="{{jig.nav}}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button></sc-for></div></div></sc-if>
+<sc-if value="{{isPage}}" hint-placeholder-val="{{false}}"><div role="group" aria-label="Toast" style="display: flex; align-items: center; gap: 8px;"><span style="color: #9ca3af; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px;">Toast</span><div style="display: inline-flex; border: 1px solid #374151; border-radius: 6px; overflow: hidden;"><sc-for list="{{jig.toast}}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button></sc-for></div></div></sc-if>
+<button type="button" data-anchor="jig-reset" onClick="{{resetJig}}" style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #374151; border-radius: 6px; background: transparent; color: #f9fafb; font: inherit; font-size: 12px; line-height: 16px; font-weight: 600; padding: 8px 12px; cursor: pointer;"><span class="ms" aria-hidden="true" style="font-size: 16px;">restart_alt</span>Reset</button>
+</div>
+<sc-if value="{{isTypes}}" hint-placeholder-val="{{true}}">
+<div class="jig-types" style="box-sizing: border-box; padding: 8px 40px 40px; display: flex; flex-direction: column; gap: 32px;">
+<sc-for list="{{types}}" as="t" hint-placeholder-count="4">
+    <section aria-label="{{t.name}} toast" style="display: flex; flex-direction: column; gap: 12px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+      <div style="display: grid; grid-template-columns: 160px repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <h2 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600;">{{t.name}}</h2>
+          <span style="color: #4a5565;">Icon: {{t.icon}}</span>
+          <span style="align-self: flex-start; display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 9999px; background: {{t.closeTagBg}}; border: 1px solid {{t.closeTagBorder}}; color: {{t.closeTagText}}; font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap;">{{t.closeLabel}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="font-size: 12px; font-weight: 600; color: #4a5565; letter-spacing: 0.04em;">LIGHT · {{lightLabel}} BORDER</div>
+          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{t.lBg}}; border: 1px solid #0000001a;"></span><strong>Fill</strong> {{t.lBgName}}</div>
+          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{t.lBorder}}; border: 1px solid #0000001a;"></span><strong>Border</strong> {{t.lBorderName}}</div>
+          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{t.lText}}; border: 1px solid #0000001a;"></span><strong>Text, icon</strong> {{t.lTextName}}</div>
+          <div><strong>Contrast</strong> {{t.lRatio}} to 1, passes</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="font-size: 12px; font-weight: 600; color: #4a5565; letter-spacing: 0.04em;">DARK · {{styleLabel}}</div>
+          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{t.dBg}}; border: 1px solid #0000001a;"></span><strong>Fill</strong> {{t.dBgName}}</div>
+          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{t.dBorder}}; border: 1px solid #0000001a;"></span><strong>Border</strong> {{t.dBorderName}}</div>
+          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{t.dText}}; border: 1px solid #0000001a;"></span><strong>Text, icon</strong> {{t.dTextName}}</div>
+          <div><strong>Contrast</strong> {{t.dRatio}} to 1, passes</div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 160px repeat(2, minmax(0, 1fr)); gap: 24px;">
+        <div></div>
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; display: flex; justify-content: center;">
+          <div role="status" style="display: flex; align-items: flex-start; gap: 10px; background: {{t.lBg}}; border: 1px solid {{t.lBorder}}; border-radius: 8px; box-shadow: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a; padding: 12px 16px; min-width: 400px; max-width: 100%; box-sizing: border-box; font-size: 14px; line-height: 20px;">
+            <span class="ms" aria-hidden="true" style="font-size: 20px; margin-top: 2px; color: {{t.lText}};">{{t.icon}}</span>
+            <div style="flex: 1; min-width: 0; margin-top: 2px; color: {{t.lText}};">
+              <sc-if value="{{showTitle}}" hint-placeholder-val="{{false}}"><p style="font-weight: 600;">{{t.title}}</p></sc-if>
+              <p style="font-weight: {{t.bodyWeight}};">{{t.body}}<sc-if value="{{t.hasLink}}" hint-placeholder-val="{{false}}"> <a href="#" style="color: inherit; font-weight: 600; text-decoration: underline;">{{t.link}}</a></sc-if></p>
+            </div>
+            <button type="button" aria-label="Dismiss notification" style="margin-left: auto; flex-shrink: 0; width: 24px; height: 24px; border: 0; padding: 0; border-radius: 4px; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer;"><span class="ms" aria-hidden="true" style="font-size: 18px; color: {{t.lText}};">close</span></button>
+          </div>
+        </div>
+        <div style="background: #030712; border: 1px solid #1f2937; border-radius: 12px; padding: 24px; display: flex; justify-content: center;">
+          <div role="status" style="display: flex; align-items: flex-start; gap: 10px; background: {{t.dBg}}; border: 1px solid {{t.dBorder}}; border-radius: 8px; box-shadow: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a; padding: 12px 16px; min-width: 400px; max-width: 100%; box-sizing: border-box; font-size: 14px; line-height: 20px;">
+            <span class="ms" aria-hidden="true" style="font-size: 20px; margin-top: 2px; color: {{t.dText}};">{{t.icon}}</span>
+            <div style="flex: 1; min-width: 0; margin-top: 2px; color: {{t.dText}};">
+              <sc-if value="{{showTitle}}" hint-placeholder-val="{{false}}"><p style="font-weight: 600;">{{t.title}}</p></sc-if>
+              <p style="font-weight: {{t.bodyWeight}};">{{t.body}}<sc-if value="{{t.hasLink}}" hint-placeholder-val="{{false}}"> <a href="#" style="color: inherit; font-weight: 600; text-decoration: underline;">{{t.link}}</a></sc-if></p>
+            </div>
+            <button type="button" aria-label="Dismiss notification" style="margin-left: auto; flex-shrink: 0; width: 24px; height: 24px; border: 0; padding: 0; border-radius: 4px; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer;"><span class="ms" aria-hidden="true" style="font-size: 18px; color: {{t.dText}};">close</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </sc-for>
+</div>
+</sc-if>
+<sc-if value="{{isPage}}" hint-placeholder-val="{{false}}">
+<div style="width: 1360px; box-sizing: border-box; padding: 40px; background: #ffffff; color: #111827; font-size: 13px; line-height: 18px;">
+
+  <section aria-label="Success toast spec" style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <h2 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600;">{{typeName}} toast</h2>
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 9999px; background: #eff8ff; border: 1px solid #b2ddff; color: #175cd3; font-size: 12px; line-height: 16px; font-weight: 500;">Proposal</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 12px; font-weight: 600; color: #4a5565; letter-spacing: 0.04em;">SIZE</div>
+        <div><strong>Height</strong> 50px for one line, 68px for two</div>
+        <div><strong>Width</strong> Fits the message. Min 400px, max 50% of the content. Longer messages wrap to a second line</div>
+        <div><strong>Padding</strong> 12px top and bottom, 16px sides</div>
+        <div><strong>Corners</strong> 8px</div>
+        <div><strong>Border</strong> 1px</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 12px; font-weight: 600; color: #4a5565; letter-spacing: 0.04em;">TEXT AND ICON</div>
+        <div><strong>Font</strong> Inter 14px, medium (500)</div>
+        <div><strong>Line height</strong> 20px</div>
+        <div><strong>Icon</strong> 20px filled check</div>
+        <div><strong>Gap</strong> 10px</div>
+        <div><strong>Lines</strong> One is best. Wraps at the max width. Icon and x stay lined up with the first line</div>
+        <div><strong>Close</strong> Always an 18px x, same color as the text</div>
+        <div><strong>Closes</strong> {{closesText}}</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 12px; font-weight: 600; color: #4a5565; letter-spacing: 0.04em;">COLORS, LIGHT · {{lightLabel}} BORDER</div>
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{L.bg}}; border: 1px solid #0000001a;"></span><strong>Fill</strong> {{L.bgName}}</div>
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{L.border}}; border: 1px solid #0000001a;"></span><strong>Border</strong> {{L.borderName}}</div>
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{L.text}}; border: 1px solid #0000001a;"></span><strong>Text, icon</strong> {{L.textName}}</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 12px; font-weight: 600; color: #4a5565; letter-spacing: 0.04em;">COLORS, DARK · {{darkLabel}}</div>
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{D.bg}}; border: 1px solid #0000001a;"></span><strong>Fill</strong> {{D.bgName}}</div>
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{D.border}}; border: 1px solid #0000001a;"></span><strong>Border</strong> {{D.borderName}}</div>
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 16px; height: 16px; border-radius: 4px; background: {{D.text}}; border: 1px solid #0000001a;"></span><strong>Text, icon</strong> {{D.textName}}</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 12px; font-weight: 600; color: #4a5565; letter-spacing: 0.04em;">ACCESSIBILITY</div>
+        <div><strong>Light</strong> {{L.ratio}} to 1, passes</div>
+        <div><strong>Dark</strong> {{D.ratio}} to 1, passes</div>
+        <div style="color: #4a5565;">Rule: text needs at least 4.5 to 1 (WCAG AA)</div>
+      </div>
+    </div>
+    <div style="color: #4a5565;"><strong style="color: #111827;">Position</strong> 24px from the top of the content area, centered on the content (not the whole screen).</div>
+  </section>
+
+  <div aria-hidden="true" style="display: flex; align-items: flex-end; height: 72px; margin-bottom: 10px;">
+    <div style="width: {{navW}}; flex: 0 0 auto;"></div>
+    <div style="flex: 1; display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 8px;">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <div style="background: #0c1a3d; color: #ffffff; font-weight: 600; font-size: 13px; line-height: 16px; padding: 8px 12px; border-radius: 6px;">25%</div>
+        <div style="height: 20px; border-left: 2px dotted #0c1a3d;"></div>
+        <div style="position: relative; align-self: stretch; height: 8px; border: 2px solid #0c1a3d; border-bottom: 0; border-radius: 2px 2px 0 0;"><div style="position: absolute; left: 50%; top: -6px; width: 10px; height: 10px; margin-left: -5px; border-radius: 9999px; background: #0c1a3d;"></div></div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <div style="background: #0c1a3d; color: #ffffff; font-weight: 600; font-size: 13px; line-height: 16px; padding: 8px 12px; border-radius: 6px;">Max 50%</div>
+        <div style="height: 20px; border-left: 2px dotted #0c1a3d;"></div>
+        <div style="position: relative; align-self: stretch; height: 8px; border: 2px solid #0c1a3d; border-bottom: 0; border-radius: 2px 2px 0 0;"><div style="position: absolute; left: 50%; top: -6px; width: 10px; height: 10px; margin-left: -5px; border-radius: 9999px; background: #0c1a3d;"></div></div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <div style="background: #0c1a3d; color: #ffffff; font-weight: 600; font-size: 13px; line-height: 16px; padding: 8px 12px; border-radius: 6px;">25%</div>
+        <div style="height: 20px; border-left: 2px dotted #0c1a3d;"></div>
+        <div style="position: relative; align-self: stretch; height: 8px; border: 2px solid #0c1a3d; border-bottom: 0; border-radius: 2px 2px 0 0;"><div style="position: absolute; left: 50%; top: -6px; width: 10px; height: 10px; margin-left: -5px; border-radius: 9999px; background: #0c1a3d;"></div></div>
+      </div>
+    </div>
+  </div>
+
+<div style="position: relative; width: 1280px; height: 800px; overflow: hidden; display: flex; outline: 1px solid #e5e7eb; background: {{page}}; font-size: 14px; line-height: 20px;">
+
+  <sc-if value="{{expanded}}" hint-placeholder-val="{{true}}">
+  <nav aria-label="Side menu" style="width: 230px; flex: 0 0 230px; box-sizing: border-box; border-right: 1px solid {{line}}; background: {{surface}}; padding: 16px 12px; display: flex; flex-direction: column; gap: 6px;">
+    <div style="display: flex; align-items: center; gap: 10px; height: 40px; margin-bottom: 20px; padding: 0 4px;">
+      <div style="width: 32px; height: 32px; border-radius: 6px; background: {{bar}};"></div>
+      <div style="width: 80px; height: 12px; border-radius: 6px; background: {{bar}};"></div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px; height: 36px; padding: 0 8px;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{bar}};"></div><div style="width: 72px; height: 10px; border-radius: 5px; background: {{barStrong}};"></div></div>
+    <div style="display: flex; align-items: center; height: 36px; padding: 0 8px 0 38px; border-radius: 6px; background: {{active}};"><div style="width: 78px; height: 10px; border-radius: 5px; background: {{barStrong}};"></div></div>
+    <div style="display: flex; align-items: center; height: 36px; padding: 0 8px 0 38px;"><div style="width: 88px; height: 10px; border-radius: 5px; background: {{bar}};"></div></div>
+    <div style="display: flex; align-items: center; height: 36px; padding: 0 8px 0 38px;"><div style="width: 64px; height: 10px; border-radius: 5px; background: {{bar}};"></div></div>
+    <div style="display: flex; align-items: center; height: 36px; padding: 0 8px 0 38px;"><div style="width: 70px; height: 10px; border-radius: 5px; background: {{bar}};"></div></div>
+    <div style="display: flex; align-items: center; height: 36px; padding: 0 8px 0 38px;"><div style="width: 44px; height: 10px; border-radius: 5px; background: {{bar}};"></div></div>
+    <div style="display: flex; align-items: center; gap: 12px; height: 36px; padding: 0 8px; margin-top: 12px;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{bar}};"></div><div style="width: 120px; height: 10px; border-radius: 5px; background: {{bar}};"></div></div>
+    <div style="display: flex; align-items: center; gap: 12px; height: 36px; padding: 0 8px;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{bar}};"></div><div style="width: 92px; height: 10px; border-radius: 5px; background: {{bar}};"></div></div>
+    <div style="display: flex; align-items: center; gap: 12px; height: 36px; padding: 0 8px;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{bar}};"></div><div style="width: 84px; height: 10px; border-radius: 5px; background: {{bar}};"></div></div>
+    <div style="display: flex; align-items: center; gap: 12px; height: 36px; padding: 0 8px;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{bar}};"></div><div style="width: 136px; height: 10px; border-radius: 5px; background: {{bar}};"></div></div>
+    <div style="display: flex; align-items: center; gap: 12px; height: 36px; padding: 0 8px;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{bar}};"></div><div style="width: 60px; height: 10px; border-radius: 5px; background: {{bar}};"></div></div>
+    <div style="flex: 1;"></div>
+    <div style="border-top: 1px solid {{line}}; padding-top: 12px; display: flex; align-items: center; gap: 10px; height: 52px;">
+      <div style="width: 32px; height: 32px; border-radius: 9999px; background: {{bar}};"></div>
+      <div style="display: flex; flex-direction: column; gap: 6px;"><div style="width: 90px; height: 10px; border-radius: 5px; background: {{barStrong}};"></div><div style="width: 120px; height: 8px; border-radius: 4px; background: {{bar}};"></div></div>
+    </div>
+  </nav>
+  </sc-if>
+  <sc-if value="{{collapsed}}" hint-placeholder-val="{{false}}">
+  <nav aria-label="Side menu, closed" style="width: 64px; flex: 0 0 64px; box-sizing: border-box; border-right: 1px solid {{line}}; background: {{surface}}; padding: 16px 0; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+    <div style="width: 32px; height: 32px; border-radius: 6px; background: {{bar}}; margin: 4px 0 64px;"></div>
+    <div style="width: 36px; height: 36px; border-radius: 6px; background: {{active}}; display: flex; align-items: center; justify-content: center;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{barStrong}};"></div></div>
+    <div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{bar}};"></div></div>
+    <div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{bar}};"></div></div>
+    <div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{bar}};"></div></div>
+    <div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{bar}};"></div></div>
+    <div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;"><div style="width: 18px; height: 18px; border-radius: 4px; background: {{bar}};"></div></div>
+    <div style="flex: 1;"></div>
+    <div style="width: 32px; height: 32px; border-radius: 9999px; background: {{bar}};"></div>
+  </nav>
+  </sc-if>
+
+  <main style="position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column;">
+    <sc-if value="{{showToast}}" hint-placeholder-val="{{true}}">
+    <div role="status" style="position: absolute; z-index: 10; top: 24px; left: 50%; transform: translateX(-50%); width: max-content; min-width: 400px; max-width: 50%; display: flex; align-items: flex-start; gap: 10px; background: {{toastBg}}; border: 1px solid {{toastBorder}}; border-radius: 8px; box-shadow: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a; padding: 12px 16px; box-sizing: border-box;">
+      <span class="ms" aria-hidden="true" style="font-size: 20px; margin-top: 2px; color: {{toastIcon}}; font-variation-settings: 'FILL' 1;">{{icon}}</span>
+      <div style="flex: 1; min-width: 0; margin-top: 2px; color: {{toastText}};">
+        <sc-if value="{{showTitle}}" hint-placeholder-val="{{false}}"><p style="font-weight: 600;">{{pt.title}}</p></sc-if>
+        <p style="font-weight: {{pt.bodyWeight}};">{{pt.body}}<sc-if value="{{pt.hasLink}}" hint-placeholder-val="{{false}}"> <a href="#" style="color: inherit; font-weight: 600; text-decoration: underline;">{{pt.link}}</a></sc-if></p>
+      </div>
+      <button type="button" aria-label="Dismiss notification" style="margin-left: auto; flex-shrink: 0; width: 24px; height: 24px; border: 0; padding: 0; border-radius: 4px; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer;"><span class="ms" aria-hidden="true" style="font-size: 18px; color: {{toastText}};">close</span></button>
+    </div>
+    </sc-if>
+    <header style="height: 72px; flex: 0 0 72px; box-sizing: border-box; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid {{line}}; background: {{surface}};">
+      <div style="width: 140px; height: 16px; border-radius: 8px; background: {{barStrong}};"></div>
+      <div style="width: 120px; height: 40px; box-sizing: border-box; border-radius: 6px; border: 1.5px solid {{outline}}; display: flex; align-items: center; justify-content: center;"><div style="width: 64px; height: 10px; border-radius: 5px; background: {{bar}};"></div></div>
+    </header>
+
+    <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px; flex: 1; min-height: 0;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 340px; height: 40px; box-sizing: border-box; border: 1.5px solid {{outline}}; border-radius: 6px; display: flex; align-items: center; gap: 10px; padding: 0 12px;"><div style="width: 14px; height: 14px; border-radius: 9999px; border: 2px solid {{bar}}; box-sizing: border-box;"></div><div style="width: 160px; height: 10px; border-radius: 5px; background: {{bar}};"></div></div>
+        <div style="flex: 1;"></div>
+        <div style="width: 160px; height: 40px; box-sizing: border-box; border: 1.5px solid {{outline}}; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px;"><div style="width: 90px; height: 10px; border-radius: 5px; background: {{bar}};"></div><div style="width: 8px; height: 8px; border-right: 2px solid {{bar}}; border-bottom: 2px solid {{bar}}; transform: rotate(45deg); margin-top: -4px;"></div></div>
+        <div style="width: 160px; height: 40px; box-sizing: border-box; border: 1.5px solid {{outline}}; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px;"><div style="width: 84px; height: 10px; border-radius: 5px; background: {{bar}};"></div><div style="width: 8px; height: 8px; border-right: 2px solid {{bar}}; border-bottom: 2px solid {{bar}}; transform: rotate(45deg); margin-top: -4px;"></div></div>
+        <div style="width: 134px; height: 40px; box-sizing: border-box; border: 1.5px solid {{outline}}; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px;"><div style="width: 54px; height: 10px; border-radius: 5px; background: {{bar}};"></div><div style="width: 8px; height: 8px; border-right: 2px solid {{bar}}; border-bottom: 2px solid {{bar}}; transform: rotate(45deg); margin-top: -4px;"></div></div>
+        <div style="width: 40px; height: 40px; box-sizing: border-box; border: 1.5px solid {{outline}}; border-radius: 6px;"></div>
+        <div style="width: 40px; height: 40px; box-sizing: border-box; border: 1.5px solid {{outline}}; border-radius: 6px;"></div>
+      </div>
+
+      <div style="flex: 1; min-height: 0; border: 1px solid {{line}}; border-radius: 8px; overflow: hidden; display: flex; background: {{surface}};">
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
+          <div style="height: 48px; flex: 0 0 48px; display: grid; grid-template-columns: 40px 28px 240px 200px 100px 120px 140px 1fr; align-items: center; border-bottom: 1px solid {{line}}; padding-left: 12px;">
+            <div style="width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid {{outline}}; box-sizing: border-box;"></div><div></div>
+            <div style="width: 48px; height: 9px; border-radius: 5px; background: {{barStrong}};"></div>
+            <div style="width: 96px; height: 9px; border-radius: 5px; background: {{barStrong}};"></div>
+            <div style="width: 32px; height: 9px; border-radius: 5px; background: {{barStrong}};"></div>
+            <div style="width: 64px; height: 9px; border-radius: 5px; background: {{barStrong}};"></div>
+            <div style="width: 84px; height: 9px; border-radius: 5px; background: {{barStrong}};"></div>
+            <div style="width: 64px; height: 9px; border-radius: 5px; background: {{barStrong}};"></div>
+          </div>
+          <sc-for list="{{rows}}" as="r" hint-placeholder-count="14">
+            <div style="height: 40px; flex: 0 0 40px; display: grid; grid-template-columns: 40px 28px 240px 200px 100px 120px 140px 1fr; align-items: center; border-bottom: 1px solid {{line}}; padding-left: 12px; background: {{r.bg}};">
+              <div style="width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid {{outline}}; box-sizing: border-box;"></div>
+              <div style="width: 6px; height: 6px; border-right: 2px solid {{bar}}; border-bottom: 2px solid {{bar}}; transform: rotate(-45deg);"></div>
+              <div style="width: 196px; height: 9px; border-radius: 5px; background: {{barStrong}};"></div>
+              <div style="width: 150px; height: 9px; border-radius: 5px; background: {{bar}};"></div>
+              <div style="width: 44px; height: 9px; border-radius: 5px; background: {{bar}};"></div>
+              <div style="width: 84px; height: 9px; border-radius: 5px; background: {{bar}};"></div>
+              <div style="width: 96px; height: 9px; border-radius: 5px; background: {{bar}};"></div>
+              <div style="width: 12px; height: 2px; background: {{bar}};"></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="width: 32px; flex: 0 0 32px; border-left: 1px solid {{line}}; display: flex; flex-direction: column; align-items: center; gap: 24px; padding-top: 16px;">
+          <div style="width: 6px; height: 64px; border-radius: 3px; background: {{bar}};"></div>
+          <div style="width: 6px; height: 52px; border-radius: 3px; background: {{bar}};"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+</div>
+</sc-if>
+</div>
+</template>
+<script>
+// Toast jig: a standalone copy of the "Toast jig" board from Brenda's Design System Artifact Board (Oct 29, 2026).
+// Use the control bar at the top of the page. Everything needed is in this one file;
+// only the Inter font and the icons load from Google Fonts, so it needs internet for those.
+
+// --- Small stand-in for the canvas runtime ---
+class DCLogic {
+  constructor() { this.state = {}; this.props = {}; }
+  setState(patch) { Object.assign(this.state, patch); render(); }
+}
+
+// --- The board's own logic (copied as is) ---
+
+
+// Toast jig: the Toast types and Toasts (wireframe) boards, with their Tweaks as controls on the page (Brenda, Oct 29).
+// The originals stay untouched; this board copies their content and logic.
+const OPTIONS = {
+  view: ['All types', 'On a page'], type: ['Success', 'Error', 'Warning', 'Info'], title: ['Off', 'On'], link: ['Off', 'On'], lines: ['1', '2'],
+  light: ['None', 'Soft', 'Strong'], dark: ['Calm', 'Bright', 'Vivid'], page: ['Light', 'Dark'], nav: ['Open', 'Collapsed'], toast: ['Show', 'Hide']
+};
+const DEFAULTS = { view: 'All types', type: 'Success', title: 'On', link: 'On', lines: '2', light: 'Soft', dark: 'Vivid', page: 'Light', nav: 'Collapsed', toast: 'Show' };
+const BTN = 'border: 0; margin: 0; font: inherit; font-size: 12px; line-height: 16px; padding: 8px 12px; cursor: pointer; white-space: nowrap;';
+class Component extends DCLogic {
+  typesVals(J) {
+
+    const types = [
+      { name: 'Success', icon: 'check_circle', message: 'Your changes have been saved.',
+        lBg: '#ecfdf3', lBgName: 'Success 50 #ecfdf3', lBorder: '#abefc6', lBorderName: 'Success 200 #abefc6', lText: '#067647', lTextName: 'Success 700 #067647', lRatio: '5.4',
+        dBg: '#053321', dBgName: 'Success 950 #053321', dBorder: '#085d3a', dBorderName: 'Success 800 #085d3a', dText: '#abefc6', dTextName: 'Success 200 #abefc6', dRatio: '10.6' },
+      { name: 'Error', icon: 'error', message: "We couldn't save your changes.",
+        lBg: '#fef3f2', lBgName: 'Error 50 #fef3f2', lBorder: '#fecdca', lBorderName: 'Error 200 #fecdca', lText: '#b42318', lTextName: 'Error 700 #b42318', lRatio: '6.1',
+        dBg: '#55160c', dBgName: 'Error 950 #55160c', dBorder: '#912018', dBorderName: 'Error 800 #912018', dText: '#fecdca', dTextName: 'Error 200 #fecdca', dRatio: '9.8' },
+      { name: 'Warning', icon: 'warning', message: "Some items weren't updated.",
+        lBg: '#fffaeb', lBgName: 'Warning 50 #fffaeb', lBorder: '#fedf89', lBorderName: 'Warning 200 #fedf89', lText: '#b54708', lTextName: 'Warning 700 #b54708', lRatio: '5.2',
+        dBg: '#4e1d09', dBgName: 'Warning 950 #4e1d09', dBorder: '#93370d', dBorderName: 'Warning 800 #93370d', dText: '#fedf89', dTextName: 'Warning 200 #fedf89', dRatio: '10.7' },
+      { name: 'Info', icon: 'info', message: "Your export is being prepared.",
+        lBg: '#eff8ff', lBgName: 'Blue 50 #eff8ff', lBorder: '#b2ddff', lBorderName: 'Blue 200 #b2ddff', lText: '#175cd3', lTextName: 'Blue 700 #175cd3', lRatio: '5.6',
+        dBg: '#102a56', dBgName: 'Blue 950 #102a56', dBorder: '#1849a9', dBorderName: 'Blue 800 #1849a9', dText: '#b2ddff', dTextName: 'Blue 200 #b2ddff', dRatio: '9.9' }
+    ];
+    const style = J.dark;
+    const alt = {
+      Bright: {
+        Success: ['#085d3a','Success 800 #085d3a','#067647','Success 700 #067647','#ecfdf3','Success 50 #ecfdf3','7.6'],
+        Error:   ['#912018','Error 800 #912018','#b42318','Error 700 #b42318','#fef3f2','Error 50 #fef3f2','8.0'],
+        Warning: ['#93370d','Warning 800 #93370d','#b54708','Warning 700 #b54708','#fffaeb','Warning 50 #fffaeb','7.2'],
+        Info:    ['#1849a9','Blue 800 #1849a9','#175cd3','Blue 700 #175cd3','#eff8ff','Blue 50 #eff8ff','7.6']
+      },
+      Vivid: {
+        Success: ['#067647','Success 700 #067647','#079455','Success 600 #079455','#ecfdf3','Success 50 #ecfdf3','5.4'],
+        Error:   ['#b42318','Error 700 #b42318','#d92d20','Error 600 #d92d20','#fef3f2','Error 50 #fef3f2','6.1'],
+        Warning: ['#b54708','Warning 700 #b54708','#dc6803','Warning 600 #dc6803','#fffaeb','Warning 50 #fffaeb','5.2'],
+        Info:    ['#175cd3','Blue 700 #175cd3','#1570ef','Blue 600 #1570ef','#eff8ff','Blue 50 #eff8ff','5.6']
+      }
+    };
+    const out = alt[style] ? types.map((t) => { const a = alt[style][t.name]; return { ...t, dBg: a[0], dBgName: a[1], dBorder: a[2], dBorderName: a[3], dText: a[4], dTextName: a[5], dRatio: a[6] }; }) : types;
+    const lb = J.light;
+    const out2 = out.map((t) => lb === 'None'
+      ? { ...t, lBorder: 'transparent', lBorderName: 'None' }
+      : lb === 'Strong' ? { ...t, lBorder: t.lText, lBorderName: t.lTextName + ' (same as text)' } : t);
+    const showTitle = J.title === 'On';
+    const showLink = J.link === 'On';
+    const longMessage = J.lines === '2';
+    const longText = {
+      Success: 'Your changes have been saved and are now live in all 12 of your stores. It may take a minute to show on every register.',
+      Error: "We couldn't save your changes because your connection dropped. Check your internet and try again in a moment.",
+      Warning: "Some items weren't updated because 3 products are missing a price. Add a price to each one before you continue.",
+      Info: "Your export is being prepared. Large reports can take a few minutes, and we'll email you when it's ready."
+    };
+    const stays = (n) => n === 'Warning' || n === 'Error';
+    const two = {
+      Success: { title: 'Changes saved', desc: 'Your updates are now live in all your stores.', link: '' },
+      Error: { title: "Couldn't save your changes", desc: 'Your connection dropped. Try again in a moment.', link: 'Try again' },
+      Warning: { title: "Some items weren't updated", desc: '3 products are missing a price. Check them before you continue.', link: 'View items' },
+      Info: { title: 'Export started', desc: "We'll email you when your report is ready.", link: '' }
+    };
+    const out3 = out2.map((t) => {
+      const x = two[t.name] || { title: '', desc: '', link: '' };
+      const hasLink = showLink && !!x.link;
+      return { ...t, title: x.title, body: showTitle ? (longMessage ? longText[t.name] : x.desc) : (longMessage ? longText[t.name] : t.message), bodyWeight: showTitle ? '400' : '500', link: x.link, hasLink,
+        closeLabel: stays(t.name) ? 'Stays until closed' : 'Closes after 5 sec',
+        closeTagBg: '#f3f4f6', closeTagBorder: '#e5e7eb', closeTagText: '#364153' };
+    });
+    
+    return { types: out3, showTitle, styleLabel: style.toUpperCase(), lightLabel: lb.toUpperCase() };
+  }
+  pageVals(J) {
+
+    const d = J.page === 'Dark';
+    const T = {
+      Success: { icon: 'check_circle', message: 'Your changes have been saved and are now live in all your stores.',
+        L: ['#ecfdf3','Success 50 #ecfdf3','#abefc6','Success 200 #abefc6','#067647','Success 700 #067647','5.4'],
+        Calm: ['#053321','Success 950 #053321','#085d3a','Success 800 #085d3a','#abefc6','Success 200 #abefc6','10.6'],
+        Bright: ['#085d3a','Success 800 #085d3a','#067647','Success 700 #067647','#ecfdf3','Success 50 #ecfdf3','7.6'],
+        Vivid: ['#067647','Success 700 #067647','#079455','Success 600 #079455','#ecfdf3','Success 50 #ecfdf3','5.4'] },
+      Error: { icon: 'error', message: "We couldn't save your changes. Check your connection and try again.",
+        L: ['#fef3f2','Error 50 #fef3f2','#fecdca','Error 200 #fecdca','#b42318','Error 700 #b42318','6.1'],
+        Calm: ['#55160c','Error 950 #55160c','#912018','Error 800 #912018','#fecdca','Error 200 #fecdca','9.8'],
+        Bright: ['#912018','Error 800 #912018','#b42318','Error 700 #b42318','#fef3f2','Error 50 #fef3f2','8.0'],
+        Vivid: ['#b42318','Error 700 #b42318','#d92d20','Error 600 #d92d20','#fef3f2','Error 50 #fef3f2','6.1'] },
+      Warning: { icon: 'warning', message: "Some items weren't updated. Check the list before you continue.",
+        L: ['#fffaeb','Warning 50 #fffaeb','#fedf89','Warning 200 #fedf89','#b54708','Warning 700 #b54708','5.2'],
+        Calm: ['#4e1d09','Warning 950 #4e1d09','#93370d','Warning 800 #93370d','#fedf89','Warning 200 #fedf89','10.7'],
+        Bright: ['#93370d','Warning 800 #93370d','#b54708','Warning 700 #b54708','#fffaeb','Warning 50 #fffaeb','7.2'],
+        Vivid: ['#b54708','Warning 700 #b54708','#dc6803','Warning 600 #dc6803','#fffaeb','Warning 50 #fffaeb','5.2'] },
+      Info: { icon: 'info', message: "Your export is being prepared. We'll email you when it's ready.",
+        L: ['#eff8ff','Blue 50 #eff8ff','#b2ddff','Blue 200 #b2ddff','#175cd3','Blue 700 #175cd3','5.6'],
+        Calm: ['#102a56','Blue 950 #102a56','#1849a9','Blue 800 #1849a9','#b2ddff','Blue 200 #b2ddff','9.9'],
+        Bright: ['#1849a9','Blue 800 #1849a9','#175cd3','Blue 700 #175cd3','#eff8ff','Blue 50 #eff8ff','7.6'],
+        Vivid: ['#175cd3','Blue 700 #175cd3','#1570ef','Blue 600 #1570ef','#eff8ff','Blue 50 #eff8ff','5.6'] }
+    };
+    const typeName = J.type;
+    const t = T[typeName] || T.Success;
+    const ds = J.dark;
+    const lb = J.light;
+    const toObj = (a) => ({ bg: a[0], bgName: a[1], border: a[2], borderName: a[3], text: a[4], textName: a[5], ratio: a[6] });
+    const L = toObj(t.L);
+    if (lb === 'None') { L.border = 'transparent'; L.borderName = 'None'; }
+    if (lb === 'Strong') { L.border = L.text; L.borderName = L.textName + ' (same as text)'; }
+    const D = toObj(t[ds] || t.Bright);
+    const cur = d ? D : L;
+    const c = d
+      ? { page: '#030712', surface: '#030712', line: '#1f2937', bar: '#1f2937', barStrong: '#374151', outline: '#374151', active: '#111827', zebra: '#0b1120' }
+      : { page: '#f9fafb', surface: '#ffffff', line: '#e5e7eb', bar: '#e2e5ee', barStrong: '#cfd4e1', outline: '#d6dae4', active: '#f3f4f6', zebra: '#fafbfc' };
+    Object.assign(c, { toastBg: cur.bg, toastBorder: cur.border, toastIcon: cur.text, toastText: cur.text });
+    const rows = Array.from({ length: 14 }, (_, i) => ({ bg: i % 2 ? c.zebra : c.surface }));
+    const closed = J.nav === 'Collapsed';
+    const closesText = (typeName === 'Warning' || typeName === 'Error') ? 'Stays until someone clicks the x, or until the problem is fixed' : 'After 5 seconds. Pauses while hovered or focused';
+    
+    return { ...c, closesText, rows, L, D, typeName, icon: t.icon, message: t.message, darkLabel: ds.toUpperCase(), lightLabel: lb.toUpperCase(), showToast: J.toast === 'Show', expanded: !closed, collapsed: closed, navW: closed ? '64px' : '230px' };
+  }
+  renderVals() {
+    const J = Object.assign({}, DEFAULTS, this.state.jig || {});
+    const set = (k, v) => this.setState({ jig: Object.assign({}, J, { [k]: v }) });
+    const jig = {};
+    Object.keys(OPTIONS).forEach((k) => {
+      jig[k] = OPTIONS[k].map((v, i) => { const on = J[k] === v; return { label: v, pressed: on ? 'true' : 'false', pick: () => set(k, v),
+        style: BTN + (i ? 'border-left: 1px solid #374151;' : '') + (on ? 'background: #f9fafb; color: #111827; font-weight: 600;' : 'background: transparent; color: #d1d5dc; font-weight: 500;') }; });
+    });
+    const tv = this.typesVals(J);
+    const pv = this.pageVals(J);
+    const pt = tv.types.find((x) => x.name === J.type) || tv.types[0];
+    return Object.assign({}, pv, tv, { jig, pt, resetJig: () => this.setState({ jig: { view: J.view } }), isPage: J.view === 'On a page', showLightCtl: J.view === 'All types' || J.page === 'Light', showDarkCtl: J.view === 'All types' || J.page === 'Dark', isTypes: J.view === 'All types' });
+  }
+}
+
+
+
+// --- Template filler: {{name}} holes, <sc-for> repeats, <sc-if> shows or hides, onClick="{{fn}}" ---
+function lookup(scope, path) {
+  path = path.trim();
+  if (path === 'true') return true; if (path === 'false') return false;
+  return path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), scope);
+}
+function fill(str, scope) { return str.replace(/\{\{([^}]+)\}\}/g, (_, p) => { const v = lookup(scope, p); return v == null ? '' : v; }); }
+function walk(node, scope) {
+  for (const child of Array.from(node.childNodes)) {
+    if (child.nodeType === 3) { if (child.nodeValue.includes('{{')) child.nodeValue = fill(child.nodeValue, scope); continue; }
+    if (child.nodeType !== 1) continue;
+    const tag = child.tagName.toLowerCase();
+    if (tag === 'sc-for') {
+      const list = lookup(scope, child.getAttribute('list').replace(/[{}]/g, '')) || [];
+      const as = child.getAttribute('as');
+      const frag = document.createDocumentFragment();
+      list.forEach((item) => { const c = child.cloneNode(true); walk(c, Object.assign({}, scope, { [as]: item })); while (c.firstChild) frag.appendChild(c.firstChild); });
+      child.replaceWith(frag); continue;
+    }
+    if (tag === 'sc-if') {
+      const on = lookup(scope, child.getAttribute('value').replace(/[{}]/g, ''));
+      if (!on) { child.remove(); continue; }
+      walk(child, scope); const frag = document.createDocumentFragment(); while (child.firstChild) frag.appendChild(child.firstChild); child.replaceWith(frag); continue;
+    }
+    for (const a of Array.from(child.attributes)) {
+      if (/^on/i.test(a.name) && /^\{\{.*\}\}$/.test(a.value.trim())) {
+        const fn = lookup(scope, a.value.trim().slice(2, -2));
+        child.removeAttribute(a.name);
+        if (typeof fn === 'function') child.addEventListener(a.name.slice(2).toLowerCase(), fn);
+      } else if (a.value.includes('{{')) child.setAttribute(a.name, fill(a.value, scope));
+    }
+    walk(child, scope);
+  }
+}
+const component = new Component();
+function render() {
+  const frag = document.getElementById('jig-template').content.cloneNode(true);
+  walk(frag, component.renderVals());
+  const app = document.getElementById('app'); app.innerHTML = ''; app.appendChild(frag);
+}
+render();
+</script>
+</body>
+</html>
